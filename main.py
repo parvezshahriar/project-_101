@@ -1,29 +1,35 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, UploadFile, File
 import uvicorn
+import csv 
 from dbmodel import Product
 from database import Session, engine, Base
-
-Base.metadata.create_all(bind=engine)
-
-
-class ProductSchema(BaseModel):
-    """Pydantic schema for request/response validation"""
-    id: int = None
-    name: str
-    price: float
-    description: str
-
-    class Config:
-        from_attributes = True
-
+from models import ProductSchema
 
 app = FastAPI()
+@app.on_event("startup")
 
+def on_startup():
+    Base.metadata.create_all(bind=engine)
 
-@app.get('/')
-def greet():
-    return 'hello man'
+@app.post('/csv-upload')
+async def upolad_csv(file: UploadFile = File(...)):
+    if not file.filename.endswith('.csv'):
+        raise HTTPException(status_code=400, detail="Invalid file format. Please upload a CSV file.")
+    content = await file.read()
+    decoded = content.decode('utf-8').splitlines()
+    reader = csv.DictReader(decoded)
+    db = Session()
+    for row in reader:
+        product = Product(
+            id=int(row['id']),
+            name=row['name'],
+            price=float(row['price']),
+            description=row.get('description', None)
+        )
+        db.add(product)
+    db.commit()
+    db.close()
+    return {"message": "CSV data uploaded successfully"}
 
 
 @app.get('/product')
