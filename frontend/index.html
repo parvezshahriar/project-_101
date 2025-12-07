@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nagad Demo - Frontend</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Nagad Demo API Client</h1>
+            <p>Manage Products, Upload Images & Data</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="products">Products</button>
+            <button class="tab-btn" data-tab="upload">Upload</button>
+            <button class="tab-btn" data-tab="images">Images</button>
+            <button class="tab-btn" data-tab="countries">Countries</button>
+        </nav>
+
+        <!-- Products Tab -->
+        <section id="products" class="tab-content active">
+            <div class="section-container">
+                <h2>Product Management</h2>
+                
+                <div class="form-group">
+                    <h3>Add New Product</h3>
+                    <form id="addProductForm">
+                        <input type="text" id="productName" placeholder="Product Name" required>
+                        <input type="number" id="productPrice" placeholder="Price" step="0.01" required>
+                        <textarea id="productDescription" placeholder="Description"></textarea>
+                        <button type="submit" class="btn btn-primary">Add Product</button>
+                    </form>
+                    <div id="addProductStatus" class="status"></div>
+                </div>
+
+                <div class="form-group">
+                    <h3>Get Product by ID</h3>
+                    <div class="input-group">
+                        <input type="number" id="getProductId" placeholder="Enter Product ID" min="1">
+                        <button class="btn btn-secondary" onclick="getProductById()">Get Product</button>
+                    </div>
+                    <div id="getProductResult" class="result"></div>
+                </div>
+
+                <div class="form-group">
+                    <h3>All Products</h3>
+                    <button class="btn btn-secondary" onclick="getAllProducts()">Fetch All Products</button>
+                    <div id="allProductsResult" class="result"></div>
+                </div>
+
+                <div class="form-group">
+                    <h3>Update Product</h3>
+                    <form id="updateProductForm">
+                        <input type="number" id="updateProductId" placeholder="Product ID" min="1" required>
+                        <input type="text" id="updateProductName" placeholder="New Name" required>
+                        <input type="number" id="updateProductPrice" placeholder="New Price" step="0.01" required>
+                        <textarea id="updateProductDescription" placeholder="New Description"></textarea>
+                        <button type="submit" class="btn btn-warning">Update Product</button>
+                    </form>
+                    <div id="updateProductStatus" class="status"></div>
+                </div>
+
+                <div class="form-group">
+                    <h3>Delete Product</h3>
+                    <div class="input-group">
+                        <input type="number" id="deleteProductId" placeholder="Enter Product ID" min="1">
+                        <button class="btn btn-danger" onclick="deleteProduct()">Delete Product</button>
+                    </div>
+                    <div id="deleteProductStatus" class="status"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upload Tab -->
+        <section id="upload" class="tab-content">
+            <div class="section-container">
+                <h2>Data Upload</h2>
+                
+                <div class="form-group">
+                    <h3>CSV Upload</h3>
+                    <p class="info">Expected format: id, name, price, description</p>
+                    <input type="file" id="csvFile" accept=".csv" class="file-input">
+                    <button class="btn btn-primary" onclick="uploadCSV()">Upload CSV</button>
+                    <div id="csvStatus" class="status"></div>
+                </div>
+
+                <div class="csv-preview">
+                    <h4>CSV Format Example:</h4>
+                    <pre>id,name,price,description
+1,Apple,5.99,Fresh red apples
+2,Banana,2.99,Yellow bananas
+3,Orange,3.99,Fresh oranges</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Images Tab -->
+        <section id="images" class="tab-content">
+            <div class="section-container">
+                <h2>Image Management</h2>
+                
+                <div class="form-group">
+                    <h3>Upload Image</h3>
+                    <input type="file" id="imageFile" accept="image/*" class="file-input">
+                    <button class="btn btn-primary" onclick="uploadImage()">Upload Image</button>
+                    <div id="uploadImageStatus" class="status"></div>
+                </div>
+
+                <div class="form-group">
+                    <h3>Get Image</h3>
+                    <div class="input-group">
+                        <input type="number" id="getImageId" placeholder="Enter Image ID" min="1">
+                        <button class="btn btn-secondary" onclick="getImage()">Get Image</button>
+                    </div>
+                    <div id="getImageResult" class="result"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Countries Tab -->
+        <section id="countries" class="tab-content">
+            <div class="section-container">
+                <h2>Country Management</h2>
+                
+                <div class="form-group">
+                    <h3>Add Country</h3>
+                    <form id="addCountryForm">
+                        <input type="text" id="countryName" placeholder="Country Name" required>
+                        <input type="text" id="countryCode" placeholder="Country Code (e.g., US)" maxlength="2" required>
+                        <button type="submit" class="btn btn-primary">Add Country</button>
+                    </form>
+                    <div id="addCountryStatus" class="status"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
