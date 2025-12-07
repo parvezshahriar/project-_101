@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopHub - Your Online Shopping Destination</title>
+    <link rel="stylesheet" href="shop-styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h2>🛍️ ShopHub</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" onclick="showSection('home')" class="nav-link active">Home</a></li>
+                <li><a href="#" onclick="showSection('products')" class="nav-link">Shop</a></li>
+                <li><a href="#" onclick="showSection('cart')" class="nav-link">
+                    Cart <span class="cart-count" id="cartCount">0</span>
+                </a></li>
+                <li><a href="#" onclick="showSection('account')" class="nav-link">Account</a></li>
+                <li><a href="#" onclick="logout()" class="nav-link logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <h1>Welcome to ShopHub</h1>
+                <p>Your one-stop destination for amazing products</p>
+                <button class="btn btn-primary btn-large" onclick="showSection('products')">Start Shopping</button>
+            </div>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Fast Delivery</h3>
+                    <p>Quick and reliable shipping</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💳</div>
+                    <h3>Secure Payment</h3>
+                    <p>Safe payment processing</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">↩️</div>
+                    <h3>Easy Returns</h3>
+                    <p>Hassle-free return policy</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>Best Prices</h3>
+                    <p>Competitive and fair pricing</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="products" class="section">
+            <div class="section-header">
+                <h2>Our Products</h2>
+                <div class="filters">
+                    <input type="text" id="searchBox" placeholder="Search products..." class="search-input" onkeyup="searchProducts()">
+                    <select id="categoryFilter" class="filter-select" onchange="filterProducts()">
+                        <option value="">All Categories</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="home">Home & Garden</option>
+                        <option value="books">Books</option>
+                        <option value="food">Food & Beverages</option>
+                    </select>
+                    <select id="sortFilter" class="filter-select" onchange="sortProducts()">
+                        <option value="newest">Newest</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="popular">Most Popular</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Product Detail Modal -->
+        <div id="productModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeProductModal()">&times;</span>
+                <div class="product-detail">
+                    <div class="product-image-container">
+                        <img id="modalProductImage" src="" alt="Product" class="product-image-large">
+                    </div>
+                    <div class="product-info">
+                        <h2 id="modalProductName"></h2>
+                        <div class="product-rating">
+                            <span class="stars" id="modalProductRating"></span>
+                            <span id="modalProductReviews">(0 reviews)</span>
+                        </div>
+                        <p class="product-description" id="modalProductDescription"></p>
+                        <div class="product-price">
+                            <span class="price" id="modalProductPrice"></span>
+                            <span class="original-price" id="modalProductOriginalPrice"></span>
+                        </div>
+                        <div class="product-stock">
+                            <span id="modalProductStock"></span>
+                        </div>
+                        <div class="quantity-selector">
+                            <button class="qty-btn" onclick="decreaseQty()">-</button>
+                            <input type="number" id="modalProductQty" value="1" min="1" class="qty-input">
+                            <button class="qty-btn" onclick="increaseQty()">+</button>
+                        </div>
+                        <button class="btn btn-primary btn-large" onclick="addToCartFromModal()">Add to Cart</button>
+                        <button class="btn btn-secondary" onclick="addToWishlist()">❤️ Add to Wishlist</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shopping Cart Section -->
+        <section id="cart" class="section">
+            <div class="section-header">
+                <h2>Shopping Cart</h2>
+            </div>
+            <div class="cart-container">
+                <div class="cart-items" id="cartItems">
+                    <!-- Cart items will be loaded here -->
+                </div>
+                <div class="cart-summary">
+                    <h3>Order Summary</h3>
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping:</span>
+                        <span id="shipping">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax:</span>
+                        <span id="tax">$0.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span id="total">$0.00</span>
+                    </div>
+                    <button class="btn btn-primary btn-large" onclick="proceedToCheckout()">Proceed to Checkout</button>
+                    <button class="btn btn-secondary" onclick="showSection('products')">Continue Shopping</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checkout Section -->
+        <section id="checkout" class="section">
+            <div class="section-header">
+                <h2>Checkout</h2>
+            </div>
+            <div class="checkout-container">
+                <div class="checkout-form">
+                    <h3>Shipping Information</h3>
+                    <form id="checkoutForm">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="fullName" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" id="phone" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" id="address" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>City</label>
+                                <input type="text" id="city" required>
+                            </div>
+                            <div class="form-group">
+                                <label>State</label>
+                                <input type="text" id="state" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ZIP Code</label>
+                                <input type="text" id="zipCode" required>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 30px;">Payment Information</h3>
+                        <div class="form-group">
+                            <label>Card Number</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Expiry Date</label>
+                                <input type="text" id="expiryDate" placeholder="MM/YY" required>
+                            </div>
+                            <div class="form-group">
+                                <label>CVV</label>
+                                <input type="text" id="cvv" placeholder="123" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">Complete Order</button>
+                    </form>
+                </div>
+                <div class="checkout-summary">
+                    <h3>Order Summary</h3>
+                    <div id="checkoutItems"></div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span id="checkoutTotal">$0.00</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Account Section -->
+        <section id="account" class="section">
+            <div class="section-header">
+                <h2>My Account</h2>
+            </div>
+            <div class="account-container">
+                <div class="account-tabs">
+                    <button class="tab-btn active" onclick="switchAccountTab('profile')">Profile</button>
+                    <button class="tab-btn" onclick="switchAccountTab('orders')">Orders</button>
+                    <button class="tab-btn" onclick="switchAccountTab('wishlist')">Wishlist</button>
+                    <button class="tab-btn" onclick="switchAccountTab('settings')">Settings</button>
+                </div>
+
+                <!-- Profile Tab -->
+                <div id="profile-tab" class="account-tab active">
+                    <div class="profile-info">
+                        <div class="profile-avatar">👤</div>
+                        <h3 id="userName">User Name</h3>
+                        <p id="userEmail">user@email.com</p>
+                    </div>
+                    <div class="profile-form">
+                        <h4>Update Profile</h4>
+                        <form id="profileForm">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="profileName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="profileEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" id="profilePhone">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Orders Tab -->
+                <div id="orders-tab" class="account-tab">
+                    <h4>Order History</h4>
+                    <div id="ordersContainer"></div>
+                </div>
+
+                <!-- Wishlist Tab -->
+                <div id="wishlist-tab" class="account-tab">
+                    <h4>My Wishlist</h4>
+                    <div class="products-grid" id="wishlistGrid"></div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settings-tab" class="account-tab">
+                    <div class="settings-group">
+                        <h4>Password</h4>
+                        <form id="passwordForm">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="currentPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" id="newPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <input type="password" id="confirmPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Change Password</button>
+                        </form>
+                    </div>
+                    <div class="settings-group">
+                        <h4>Preferences</h4>
+                        <label class="checkbox">
+                            <input type="checkbox" id="emailNotifications" checked>
+                            Receive email notifications
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" id="promotions" checked>
+                            Receive promotional offers
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>About Us</h4>
+                <p>ShopHub is your trusted online shopping platform offering quality products at great prices.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Track Order</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#">Facebook</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Instagram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 ShopHub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="shop-script.js"></script>
+</body>
+</html>
